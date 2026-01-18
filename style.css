@@ -22,11 +22,14 @@ body{
     input{
         margin:1% 0%;
     }
-    .botoncito{
+    .botoncito,input[type=text], input[type=number]{
      margin:1% 0%;
      padding:1% 2%;
      background-color: rgb(193, 214, 231);
      border:2px solid rgb(7, 56, 95);
      border-radius: 10px;
     } 
+    .botoncito:hover{
+        background-color: rgb(90, 165, 226);;
+    }
 }

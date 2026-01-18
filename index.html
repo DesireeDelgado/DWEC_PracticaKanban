@@ -11,8 +11,9 @@
         <h1>Tablero Kanban</h1>
         <form action="" method="POST" id="formula">
             <label for="num_col">Introduce el numero de columnas:</label><br>
-            <input type="number" name="num_col" id="numCol"><br>
+            <input type="number" name="num_col" id="numCol" min="1"><br>
             <input type="submit" value="Enviar" class="botoncito">
+            <div id="contenedorcito"></div>
         </form>
     </main>
     <script src="./main.js"></script>
