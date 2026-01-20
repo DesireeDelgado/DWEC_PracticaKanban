@@ -33,3 +33,6 @@ body{
         background-color: rgb(90, 165, 226);;
     }
 }
+.oculto{
+    display:none;
+}

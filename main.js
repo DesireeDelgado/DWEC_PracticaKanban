@@ -55,5 +55,38 @@ formulario.addEventListener("submit",function(e){
     botonFinal.value="Confirmar";
     botonFinal.classList.add("botoncito");
     contenedor.appendChild(botonFinal);
-    //Faltan las validaciones y guardar formulario
+    //Validaciones
+    botonFinal.addEventListener("click",function(e){
+        e.preventDefault();
+
+        let columnas=[];
+
+        for(let i=1;i<=valor;i++){
+            const nombre_col=document.getElementById("idCol"+i).value;
+            const tareas=document.getElementById("colTarea"+i).value;
+
+          if(nombre_col.trim()===""){
+              alert(`Debes introducir un nombre en la columna ${i}`);
+              return;
+          }
+          if(tareas==="" || parseInt(tareas)<1){
+              alert(`El numero de tareas de la columna ${i} debe ser superior a 0`);
+              return;
+          }
+          const columna={
+             "id":i,
+             "titulo":nombre_col,
+             "nTareas":tareas,
+             "tareas":[]
+          }; 
+          columnas.push(columna);
+        }
+        //Guardar datitos
+        localStorage.setItem("tablero", JSON.stringify(columnas));
+        console.log("Datos en localStorage:", localStorage.getItem("tablero"));
+        //Se esconde el form
+        formulario.classList.add("oculto");
+        alert("Configuración guardada");
+        //guarda pero claro, hay que hacer una funcion o algo para que si hay info no se recargue el formulario
+    });
 });
