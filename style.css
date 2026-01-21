@@ -36,3 +36,27 @@ body{
 .oculto{
     display:none;
 }
+#tableroKanban{
+    display: flex;
+    width: 90%;
+    margin:auto;
+    
+}
+.columnasBonitas{
+    background-color: pink;
+    border:2px solid palevioletred;
+    width: 33%;
+    text-align: center;
+}
+.botonTarea{
+    background-color: rgb(243, 211, 216);
+    border:2px solid palevioletred;
+    border-radius: 10px;
+    margin:2% auto;
+    padding:1% 2%;
+    display:block;
+    width: 90%;
+}
+.botonTarea:hover{
+     background-color: rgb(223, 152, 163);
+}

@@ -11,6 +11,48 @@ osea si no hay info, que salga el form y si ya esta guardada la configuracion dl
 const formulario=document.getElementById("formula");
 const numCol=document.getElementById("numCol");
 const contenedor=document.getElementById("contenedorcito");
+const tableroKanban=document.getElementById("tableroKanban");
+const datos_guardados = localStorage.getItem("tablero");
+
+if (datos_guardados !==null) {
+    formulario.classList.add("oculto");
+    const cols = JSON.parse(datos_guardados);//Recupero datos
+
+    dibujarTablero(cols);
+}
+/*Para ver el localstorage desde el navegador: inspeccionar->application->localstorage y flechita */
+//FUNCIONES
+//ARREGLAR QUE CUANDO PASA DEL FORMULARIO AL TABLERO, SI REFRESCO SALE EL TABLERO PERO DEBERIA DE SALIR CONFORME SE QUITE EL FORMULARIO Y NO
+//SE QUEDE VACIO
+function dibujarTablero(datitos){
+
+  datitos.forEach((col,pos)=>{
+      const estructura=document.createElement("div");
+      estructura.classList.add("columnasBonitas");
+
+      estructura.innerHTML=
+       `<h2>${col.titulo}</h2>
+       <p>(el max de tareas son ${col.nTareas})</p>`;
+       
+       //Añado boton en la primera columna
+       if(pos===0){
+          const tarea=document.createElement("input");
+          tarea.type="text";
+          estructura.appendChild(tarea);
+
+          const botonAniadir=document.createElement("submit");
+          botonAniadir.textContent="Añadir tarea"
+          botonAniadir.classList.add("botonTarea");
+          botonAniadir.onclick =()=>{
+            aniadirTarea(datitos);
+          }
+          estructura.appendChild(botonAniadir);
+       }
+       tableroKanban.appendChild(estructura);
+  });
+}
+//funcion añadir tareas, otra para mostrar y otra para eliminar 
+//function aniadirTarea
 
 formulario.addEventListener("submit",function(e){
  e.preventDefault();
@@ -87,6 +129,5 @@ formulario.addEventListener("submit",function(e){
         //Se esconde el form
         formulario.classList.add("oculto");
         alert("Configuración guardada");
-        //guarda pero claro, hay que hacer una funcion o algo para que si hay info no se recargue el formulario
     });
 });
