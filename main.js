@@ -11,20 +11,21 @@ osea si no hay info, que salga el form y si ya esta guardada la configuracion dl
 const formulario=document.getElementById("formula");
 const numCol=document.getElementById("numCol");
 const contenedor=document.getElementById("contenedorcito");
+const mensajes= document.getElementById("mensajes");
 const tableroKanban=document.getElementById("tableroKanban");
 const datos_guardados = localStorage.getItem("tablero");
 
 if (datos_guardados !==null) {
     formulario.classList.add("oculto");
+    mensajes.classList.remove("oculto");
     const cols = JSON.parse(datos_guardados);//Recupero datos
 
     dibujarTablero(cols);
 }
 /*Para ver el localstorage desde el navegador: inspeccionar->application->localstorage y flechita */
 //FUNCIONES
-//ARREGLAR QUE CUANDO PASA DEL FORMULARIO AL TABLERO, SI REFRESCO SALE EL TABLERO PERO DEBERIA DE SALIR CONFORME SE QUITE EL FORMULARIO Y NO
-//SE QUEDE VACIO
 function dibujarTablero(datitos){
+  tableroKanban.innerHTML ="";
 
   datitos.forEach((col,pos)=>{
       const estructura=document.createElement("div");
@@ -33,11 +34,30 @@ function dibujarTablero(datitos){
       estructura.innerHTML=
        `<h2>${col.titulo}</h2>
        <p>(el max de tareas son ${col.nTareas})</p>`;
+
+        const zonaTareas=document.createElement("div");
+      zonaTareas.classList.add("zonaTareas");
+      zonaTareas.id=`zona-${pos}`;
+
+      col.tareas.forEach((texto, posTarea) => {
+            const divTarea = document.createElement("div");
+            divTarea.classList.add("tareaEstilosa"); 
+            divTarea.textContent = texto;
+             
+            //Listener para eliminar las tareas con doble click
+            divTarea.addEventListener("dblclick",(e)=>{
+               eliminarTarea(pos,posTarea,datitos);
+            });
+            zonaTareas.appendChild(divTarea);
+      });
+        estructura.appendChild(zonaTareas);
        
        //Añado boton en la primera columna
        if(pos===0){
           const tarea=document.createElement("input");
           tarea.type="text";
+          tarea.id="idTarea";
+          tarea.placeholder="Nueva tarea...";
           estructura.appendChild(tarea);
 
           const botonAniadir=document.createElement("submit");
@@ -52,7 +72,31 @@ function dibujarTablero(datitos){
   });
 }
 //funcion añadir tareas, otra para mostrar y otra para eliminar 
-//function aniadirTarea
+function aniadirTarea(datitos){
+   const input=document.getElementById("idTarea");
+   const valor=input.value;
+
+   const col1=datitos[0];
+  //Validaciones
+   if(valor === ""){
+      alert("La tarea no puede estar vacia");
+      return;
+   }
+   if(col1.tareas.length >= parseInt(col1.nTareas)){
+      alert("No se pueden añadir más columnas");
+      return;
+   }
+   col1.tareas.push(valor);//lo añado al array de tareas
+   localStorage.setItem("tablero", JSON.stringify(datitos));
+   dibujarTablero(datitos);
+}
+
+function eliminarTarea(colpos, posTarea, datitos){
+    datitos[colpos].tareas.splice(posTarea, 1);
+    //Actualizo el localStorage sin la tarea borrada
+    localStorage.setItem("tablero", JSON.stringify(datitos));
+    dibujarTablero(datitos);
+}
 
 formulario.addEventListener("submit",function(e){
  e.preventDefault();
@@ -125,9 +169,11 @@ formulario.addEventListener("submit",function(e){
         }
         //Guardar datitos
         localStorage.setItem("tablero", JSON.stringify(columnas));
-        console.log("Datos en localStorage:", localStorage.getItem("tablero"));
+        //console.log("Datos en localStorage:", localStorage.getItem("tablero"));
         //Se esconde el form
         formulario.classList.add("oculto");
         alert("Configuración guardada");
+        dibujarTablero(columnas);
+        mensajes.classList.remove("oculto");
     });
 });

@@ -1,7 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
 *{
     padding:0;
     margin:0;
     box-sizing: border-box;
+    font-family: "Roboto Mono";
 }
 body{
     background-color: rgb(122, 122, 214);
@@ -59,4 +61,32 @@ body{
 }
 .botonTarea:hover{
      background-color: rgb(223, 152, 163);
+}
+.tareaEstilosa{
+    background-color: rgb(231, 140, 219);
+    border:2px solid rgb(201, 37, 201);
+    border-radius: 10px;
+    width: 80%;
+    padding:1% 0%;
+    margin:2% auto;
+    font-weight: bold;
+}
+h2{
+    margin-top: 2%;
+}
+.texto{
+    border-bottom: 3px solid palevioletred;
+    width: 80%;
+    margin:1% auto;
+    padding-bottom: 1%;
+}
+#idTarea{
+    margin:2% 0%;
+    padding:1% 2%;
+    border: 2px solid palevioletred;
+    border-radius: 10px;
+}
+#mensajes{
+    width: 80%;
+    margin:2% auto;
 }
