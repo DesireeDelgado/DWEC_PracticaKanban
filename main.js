@@ -1,13 +1,3 @@
-/*PRACTICA
-hay que hacer un formulario y validar con eventos de formulario 
-hay que peidr num columnas 
-nombre de cada columna,
-y numero max de tareas en cada columna
-todo ello con memoria
-al añadir tareas, solo se añade en la primera columna, para el resto se arrastran las tareas y ya
-
-osea si no hay info, que salga el form y si ya esta guardada la configuracion dl form lo que aparece es el tablero
-*/
 const formulario=document.getElementById("formula");
 const numCol=document.getElementById("numCol");
 const contenedor=document.getElementById("contenedorcito");
@@ -35,15 +25,33 @@ function dibujarTablero(datitos){
        `<h2>${col.titulo}</h2>
        <p>(el max de tareas son ${col.nTareas})</p>`;
 
-        const zonaTareas=document.createElement("div");
+      const zonaTareas=document.createElement("div");
       zonaTareas.classList.add("zonaTareas");
       zonaTareas.id=`zona-${pos}`;
+
+      zonaTareas.addEventListener("dragover", (e) => {//Siempre se tiene que hacer si no no funciona
+         e.preventDefault();
+      });
+      zonaTareas.addEventListener("drop",(e)=>{
+         e.preventDefault();
+         const origen=e.dataTransfer.getData("colOrigen");
+         const posTarea=e.dataTransfer.getData("posTarea");
+         const destino=pos;
+
+         moverTarea(origen, destino, posTarea,datitos);
+      });
 
       col.tareas.forEach((texto, posTarea) => {
             const divTarea = document.createElement("div");
             divTarea.classList.add("tareaEstilosa"); 
             divTarea.textContent = texto;
-             
+            divTarea.draggable=true;
+
+             divTarea.addEventListener("dragstart",(e)=>{
+                e.dataTransfer.setData("colOrigen",pos);
+                e.dataTransfer.setData("posTarea",posTarea);
+            });
+
             //Listener para eliminar las tareas con doble click
             divTarea.addEventListener("dblclick",(e)=>{
                eliminarTarea(pos,posTarea,datitos);
@@ -71,7 +79,6 @@ function dibujarTablero(datitos){
        tableroKanban.appendChild(estructura);
   });
 }
-//funcion añadir tareas, otra para mostrar y otra para eliminar 
 function aniadirTarea(datitos){
    const input=document.getElementById("idTarea");
    const valor=input.value;
@@ -83,19 +90,35 @@ function aniadirTarea(datitos){
       return;
    }
    if(col1.tareas.length >= parseInt(col1.nTareas)){
-      alert("No se pueden añadir más columnas");
+      alert("No se pueden añadir más tareas");
       return;
    }
    col1.tareas.push(valor);//lo añado al array de tareas
    localStorage.setItem("tablero", JSON.stringify(datitos));
    dibujarTablero(datitos);
 }
-
 function eliminarTarea(colpos, posTarea, datitos){
     datitos[colpos].tareas.splice(posTarea, 1);
     //Actualizo el localStorage sin la tarea borrada
     localStorage.setItem("tablero", JSON.stringify(datitos));
     dibujarTablero(datitos);
+}
+function moverTarea(origen, destino, posTarea, datitos){
+   if(origen === destino){
+       return;
+   }
+   const columnaDestino=datitos[destino];
+   const textoTarea= datitos[origen].tareas[posTarea];//cojo la tarea seleccionada antes de borrar
+
+   if(columnaDestino.tareas.length >= parseInt(columnaDestino.nTareas)){
+      alert("No se pueden mover más tareas a esta columna");
+      return;
+   }
+
+   datitos[origen].tareas.splice(posTarea,1);//Elimino de la columna original los datos
+   columnaDestino.tareas.push(textoTarea);
+   localStorage.setItem("tablero",JSON.stringify(datitos));
+   dibujarTablero(datitos);
 }
 
 formulario.addEventListener("submit",function(e){

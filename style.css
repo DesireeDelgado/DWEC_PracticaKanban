@@ -71,6 +71,9 @@ body{
     margin:2% auto;
     font-weight: bold;
 }
+.zonaTareas{
+    min-height: 100px;
+}
 h2{
     margin-top: 2%;
 }
